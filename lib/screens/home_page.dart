@@ -1,9 +1,41 @@
 import 'package:flutter/material.dart';
-
-// import 'package:pengelan_widget/detail_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_finder/model/movie_data.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final TextEditingController _textEditingController = TextEditingController();
+  List<MovieData> _filteredMovieLists = movieDataList;
+
+  @override
+  void initState() {
+    _textEditingController.addListener(() {
+      filterMovies();
+    });
+    super.initState();
+  }
+
+  void filterMovies() {
+    String q = _textEditingController.text.toLowerCase();
+    setState(() {
+      _filteredMovieLists = movieDataList.where((movie) {
+        return movie.title.toLowerCase().contains(q);
+      }).toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,21 +44,72 @@ class MainScreen extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return const MovieList();
+          return Column(
+            children: <Widget>[
+              SearchForm(
+                textEditingController: _textEditingController,
+              ),
+              Expanded(
+                  child: SizedBox(
+                child: MovieList(filteredMovies: _filteredMovieLists),
+              ))
+            ],
+          );
         },
       ),
     );
   }
 }
 
-class MovieList extends StatelessWidget {
-  const MovieList({Key? key}) : super(key: key);
+class SearchForm extends StatelessWidget {
+  final TextEditingController textEditingController;
+
+  const SearchForm({super.key, required this.textEditingController});
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextField(
+            controller: textEditingController,
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter a title',
+                prefixIcon: Icon(Icons.search_outlined)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MovieList extends StatelessWidget {
+  final List<MovieData> filteredMovies;
+
+  const MovieList({super.key, required this.filteredMovies});
+
+  @override
+  Widget build(BuildContext context) {
+    if (filteredMovies.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/images/undraw_no_data.svg',
+            height: 150,
+            width: 150,
+          ),
+          const Text('No movies found')
+        ],
+      );
+    }
     return ListView.builder(
       itemBuilder: (context, index) {
-        final MovieData movie = movieDataList[index];
+        final MovieData movie = filteredMovies[index];
         return InkWell(
           onTap: () {
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -44,7 +127,7 @@ class MovieList extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
+                    Flexible(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15.0),
                         child: Image.asset(movie.imageAsset),
@@ -124,13 +207,13 @@ class MovieList extends StatelessWidget {
           ),
         );
       },
-      itemCount: movieDataList.length,
+      itemCount: filteredMovies.length,
     );
   }
 }
 
 class BookmarkButton extends StatefulWidget {
-  const BookmarkButton({Key? key}) : super(key: key);
+  const BookmarkButton({super.key});
 
   @override
   @override

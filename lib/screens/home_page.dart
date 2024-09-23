@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_finder/model/movie_data.dart';
+import 'package:movie_finder/screens/detail_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -127,9 +128,9 @@ class MovieList extends StatelessWidget {
         final MovieData movie = filteredMovies[index];
         return InkWell(
           onTap: () {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return DetailScreen(movie: movie);
-            // }));
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return DetailPage(movie: movie);
+            }));
           },
           child: Card(
             margin: const EdgeInsets.all(15.0),

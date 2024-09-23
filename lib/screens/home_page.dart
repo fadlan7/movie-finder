@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:movie_finder/components/bookmark_button.dart';
+import 'package:movie_finder/components/notfound_widget.dart';
 import 'package:movie_finder/model/movie_data.dart';
 import 'package:movie_finder/screens/detail_page.dart';
 
@@ -342,53 +343,5 @@ class MovieListWebView extends StatelessWidget {
         );
       }).toList(),
     );
-  }
-}
-
-class BookmarkButton extends StatefulWidget {
-  const BookmarkButton({super.key});
-
-  @override
-  _BookmarkButtonState createState() => _BookmarkButtonState();
-}
-
-class _BookmarkButtonState extends State<BookmarkButton> {
-  bool isBookmark = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        isBookmark ? Icons.bookmark : Icons.bookmark_outline,
-      ),
-      onPressed: () {
-        setState(() {
-          isBookmark = !isBookmark;
-        });
-      },
-    );
-  }
-}
-
-class NotFoundWidget extends StatelessWidget {
-  const NotFoundWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/images/undraw_no_data.svg',
-              height: 150,
-              width: 150,
-            ),
-            const Text('No movies found'),
-          ],
-        ));
   }
 }

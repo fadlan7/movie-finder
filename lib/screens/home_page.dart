@@ -40,21 +40,47 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Movie Finder'),
+        title: Text('Movie Finder. Size: ${MediaQuery.of(context).size.width}'),
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(80),
+            child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: SearchForm(
+                  textEditingController: _textEditingController,
+                ))),
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return Column(
-            children: <Widget>[
-              SearchForm(
-                textEditingController: _textEditingController,
-              ),
-              Expanded(
-                  child: SizedBox(
-                child: MovieList(filteredMovies: _filteredMovieLists),
-              ))
-            ],
-          );
+          if (constraints.maxWidth <= 630) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                    child: SizedBox(
+                  child: MovieList(filteredMovies: _filteredMovieLists),
+                ))
+              ],
+            );
+          } else if (constraints.maxWidth <= 780) {
+            return MovieListWebView(
+                filteredMovies: _filteredMovieLists,
+                gridCount: 2,
+                aspectRatio: 0.90);
+          } else if (constraints.maxWidth <= 950) {
+            return MovieListWebView(
+                filteredMovies: _filteredMovieLists,
+                gridCount: 3,
+                aspectRatio: 0.80);
+          } else if (constraints.maxWidth <= 1265) {
+            return MovieListWebView(
+                filteredMovies: _filteredMovieLists,
+                gridCount: 4,
+                aspectRatio: 0.75);
+          } else {
+            return MovieListWebView(
+                filteredMovies: _filteredMovieLists,
+                gridCount: 5,
+                aspectRatio: 0.75);
+          }
         },
       ),
     );
@@ -72,7 +98,7 @@ class SearchForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10.0),
           child: TextField(
             controller: textEditingController,
             decoration: const InputDecoration(
@@ -94,18 +120,7 @@ class MovieList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (filteredMovies.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            'assets/images/undraw_no_data.svg',
-            height: 150,
-            width: 150,
-          ),
-          const Text('No movies found')
-        ],
-      );
+      return const NotFoundWidget();
     }
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -117,91 +132,91 @@ class MovieList extends StatelessWidget {
             // }));
           },
           child: Card(
-            elevation: 2,
             margin: const EdgeInsets.all(15.0),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Image.asset(movie.imageAsset),
-                      ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 2 / 1,
+                    child: Image.asset(
+                      movie.imageAsset,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
                     ),
-                  ],
+                  ),
                 ),
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 15.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.location_pin),
-                                Text(movie.country,
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            const BookmarkButton()
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Flexible(
-                                child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  0.0, 0.0, 0.0, 20.0),
-                              child: Text(movie.title,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.location_pin),
+                              Text(movie.country,
                                   style: const TextStyle(
-                                      fontSize: 25.0,
+                                      fontSize: 16.0,
                                       fontWeight: FontWeight.bold)),
-                            ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.calendar_today),
-                                Text(movie.releaseDate,
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
+                            ],
+                          ),
+                          const BookmarkButton()
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5.0, horizontal: 10.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.star),
-                                    Text(movie.rating)
-                                  ],
-                                ),
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+                            child: Text(movie.title,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: const TextStyle(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold)),
+                          ))
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.calendar_today),
+                              Text(movie.releaseDate,
+                                  style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 5.0, horizontal: 10.0),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star),
+                                  Text(movie.rating)
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      ],
-                    )),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -212,10 +227,126 @@ class MovieList extends StatelessWidget {
   }
 }
 
+class MovieListWebView extends StatelessWidget {
+  final int gridCount;
+  final double aspectRatio;
+  final List<MovieData> filteredMovies;
+
+  const MovieListWebView(
+      {super.key,
+      required this.filteredMovies,
+      required this.gridCount,
+      required this.aspectRatio});
+
+  @override
+  Widget build(BuildContext context) {
+    if (filteredMovies.isEmpty) {
+      return const NotFoundWidget();
+    }
+    return GridView.count(
+      crossAxisCount: gridCount,
+      crossAxisSpacing: 16,
+      mainAxisSpacing: 16,
+      childAspectRatio: aspectRatio,
+      children: filteredMovies.map((movie) {
+        return InkWell(
+          onTap: () {
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return DetailScreen(movie: movie);
+            // }));
+          },
+          child: Card(
+            margin: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
+                    topRight: Radius.circular(16.0),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 2 / 1,
+                    child: Image.asset(
+                      movie.imageAsset,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.location_pin),
+                              Text(movie.country,
+                                  style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const BookmarkButton()
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                              child: Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+                            child: Text(movie.title,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: const TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                          ))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.calendar_today),
+                          Text(movie.releaseDate,
+                              style: const TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.star),
+                                Text(movie.rating)
+                              ],
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
 class BookmarkButton extends StatefulWidget {
   const BookmarkButton({super.key});
 
-  @override
   @override
   _BookmarkButtonState createState() => _BookmarkButtonState();
 }
@@ -235,5 +366,28 @@ class _BookmarkButtonState extends State<BookmarkButton> {
         });
       },
     );
+  }
+}
+
+class NotFoundWidget extends StatelessWidget {
+  const NotFoundWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/images/undraw_no_data.svg',
+              height: 150,
+              width: 150,
+            ),
+            const Text('No movies found'),
+          ],
+        ));
   }
 }

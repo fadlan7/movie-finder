@@ -22,18 +22,18 @@ class MovieData {
 
 var movieDataList = [
   MovieData(
-    title: 'Farm House Lembang',
-    country: 'Lembang',
+    title: 'The Lord of the Rings: The Return of the King',
+    country: 'United States',
     description:
-        'Berada di jalur utama Bandung-Lembang, Farm House menjadi objek wisata yang tidak pernah sepi pengunjung. Selain karena letaknya strategis, kawasan ini juga menghadirkan nuansa wisata khas Eropa. Semua itu diterapkan dalam bentuk spot swafoto Instagramable.',
-    category: 'Open Everyday',
-    releaseDate: '09:00 - 20:00',
-    rating: '8.1',
-    imageAsset: 'assets/images/farm-house.jpg',
+        'As armies mass for a final battle that will decide the fate of the world--and powerful, ancient forces of Light and Dark compete to determine the outcome--one member of the Fellowship of the Ring is revealed as the noble heir to the throne of the Kings of Men. Yet, the sole hope for triumph over evil lies with a brave hobbit, Frodo, who, accompanied by his loyal friend Sam and the hideous, wretched Gollum, ventures deep into the very dark heart of Mordor on his seemingly impossible quest to destroy the Ring of Power.',
+    category: 'Adventure, Fantasy, Action',
+    releaseDate: '01/14/2004',
+    rating: '94',
+    imageAsset: 'assets/images/lotr.jpg',
     imageUrls: [
-      'https://media-cdn.tripadvisor.com/media/photo-s/0d/7c/59/70/farmhouse-lembang.jpg',
-      'https://media-cdn.tripadvisor.com/media/photo-w/13/f0/22/f6/photo3jpg.jpg',
-      'https://media-cdn.tripadvisor.com/media/photo-m/1280/16/a9/33/43/liburan-di-farmhouse.jpg'
+      'https://media.themoviedb.org/t/p/w1000_and_h563_face/5daoHVyAAvJsusr6AowCFOasQQT.jpg',
+      'https://media.themoviedb.org/t/p/w1000_and_h563_face/vMWwOiwwQY2Q9j2MWR4OFYpACm2.jpg',
+      'https://image.tmdb.org/t/p/original/pm0RiwNpSja8gR0BTWpxo5a9Bbl.jpg'
     ],
   ),
   MovieData(

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_finder/components/bookmark_button.dart';
 import 'package:movie_finder/model/movie_data.dart';
 
 var informationTextStyle = const TextStyle(fontFamily: 'Oxygen');
@@ -38,25 +39,13 @@ class DetailMobilePage extends StatelessWidget {
             Stack(
               children: <Widget>[
                 Image.asset(movie.imageAsset),
-                SafeArea(
+                const SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                        const FavoriteButton(),
+                        BookmarkButton(),
                       ],
                     ),
                   ),
@@ -140,21 +129,6 @@ class DetailMobilePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: movie.imageUrls.map((url) {
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(url),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
           ],
         ),
       ),
@@ -208,8 +182,8 @@ class _DetailWebPageState extends State<DetailWebPage> {
                           child: Column(
                             children: [
                               ClipRRect(
-                                child: Image.asset(widget.movie.imageAsset),
                                 borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(widget.movie.imageAsset),
                               ),
                               const SizedBox(height: 16),
                               Scrollbar(
@@ -266,7 +240,7 @@ class _DetailWebPageState extends State<DetailWebPage> {
                                           ),
                                         ],
                                       ),
-                                      const FavoriteButton(),
+                                      const BookmarkButton(),
                                     ],
                                   ),
                                   Row(
@@ -321,31 +295,5 @@ class _DetailWebPageState extends State<DetailWebPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-}
-
-class FavoriteButton extends StatefulWidget {
-  const FavoriteButton({Key? key}) : super(key: key);
-
-  @override
-  _FavoriteButtonState createState() => _FavoriteButtonState();
-}
-
-class _FavoriteButtonState extends State<FavoriteButton> {
-  bool isFavorite = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(
-        isFavorite ? Icons.favorite : Icons.favorite_border,
-        color: Colors.red,
-      ),
-      onPressed: () {
-        setState(() {
-          isFavorite = !isFavorite;
-        });
-      },
-    );
   }
 }

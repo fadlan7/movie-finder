@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(
       const Duration(seconds: 2),
-          () {
+      () {
         Navigator.pushReplacementNamed(context, '/home-page');
       },
     );
@@ -21,13 +21,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 26.0),
-            Text('Movie Finder'),
+            Image.asset(
+              'assets/images/video.png',
+              fit: BoxFit.cover,
+              width: 150,
+            ),
+            const SizedBox(height: 10.0),
+            const Text('Movie Finder',
+                style: TextStyle(
+                    fontSize: 25.0, fontWeight: FontWeight.bold))
           ],
         ),
       ),

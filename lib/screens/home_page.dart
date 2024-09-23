@@ -42,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movie Finder. Size: ${MediaQuery.of(context).size.width}'),
+        title: const Text('Movie Finder'),
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(80),
             child: Padding(
@@ -253,9 +253,9 @@ class MovieListWebView extends StatelessWidget {
       children: filteredMovies.map((movie) {
         return InkWell(
           onTap: () {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return DetailScreen(movie: movie);
-            // }));
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return DetailPage(movie: movie);
+            }));
           },
           child: Card(
             margin: const EdgeInsets.all(15.0),

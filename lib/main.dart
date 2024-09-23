@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_finder/screens/home_page.dart';
+import 'package:movie_finder/screens/splash_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,7 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Movie Finder',
       theme: ThemeData(),
-      home: MainScreen(),
+      home: SplashScreen(),
+      routes: {
+        '/home-page': (context) => const MainScreen(),
+      }
     );
   }
 }
